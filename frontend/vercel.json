@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://SEU-BACKEND.railway.app/api/:path*"
+      "destination": "https://raspy-lavena-sistemacultura-hobby-6ef39ebc.koyeb.app/api/:path*"
     }
   ]
 }
