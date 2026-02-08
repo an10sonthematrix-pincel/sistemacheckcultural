@@ -1,4 +1,13 @@
-const API_BASE = 'http://localhost:5000/api';
+// Allows override via window.API_BASE; defaults to localhost in local/file access,
+// and to /api in deployed environments (use Vercel rewrites if needed).
+const API_BASE = (() => {
+    if (window.API_BASE) return window.API_BASE;
+    const host = window.location.hostname;
+    if (!host || host === 'localhost' || host === '127.0.0.1') {
+        return 'http://localhost:5000/api';
+    }
+    return '/api';
+})();
 
 class API {
     // PROCESSOS
