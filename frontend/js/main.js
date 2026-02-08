@@ -192,6 +192,14 @@ async function carregarProcessos() {
                         Nova VerificaÃ§Ã£o
                     </button>
                 </div>
+                <div class="flex gap-2 mt-2">
+                    <button onclick="editarProcesso(${p.id})" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
+                        Editar
+                    </button>
+                    <button onclick="excluirProcesso(${p.id})" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                        Excluir
+                    </button>
+                </div>
             </div>
         `).join('');
     } catch (erro) {
@@ -213,6 +221,52 @@ async function criarProcesso() {
     } catch (erro) {
         console.error('Erro ao criar processo:', erro);
         mostrarMensagem('Erro ao criar processo', 'error');
+    }
+}
+
+async function editarProcesso(processoId) {
+    try {
+        const processo = await API.getProcesso(processoId);
+        if (!processo || processo.erro) {
+            mostrarMensagem(processo?.erro || 'Processo nÃ£o encontrado', 'error');
+            return;
+        }
+
+        const nome = prompt('Nome do processo:', processo.nome || '');
+        if (!nome) return;
+
+        const descricao = prompt('DescriÃ§Ã£o (opcional):', processo.descricao || '');
+
+        const resultado = await API.atualizarProcesso(processoId, nome, descricao);
+        if (resultado && resultado.mensagem) {
+            mostrarMensagem(resultado.mensagem);
+            carregarProcessos();
+        } else if (resultado && resultado.erro) {
+            mostrarMensagem(resultado.erro, 'error');
+        }
+    } catch (erro) {
+        console.error('Erro ao editar processo:', erro);
+        mostrarMensagem('Erro ao editar processo', 'error');
+    }
+}
+
+async function excluirProcesso(processoId) {
+    try {
+        const processo = await API.getProcesso(processoId);
+        const nome = processo && processo.nome ? processo.nome : 'este processo';
+
+        if (!confirm(`Deseja excluir o processo "${nome}"?`)) return;
+
+        const resultado = await API.excluirProcesso(processoId);
+        if (resultado && resultado.mensagem) {
+            mostrarMensagem(resultado.mensagem);
+            carregarProcessos();
+        } else if (resultado && resultado.erro) {
+            mostrarMensagem(resultado.erro, 'error');
+        }
+    } catch (erro) {
+        console.error('Erro ao excluir processo:', erro);
+        mostrarMensagem('Erro ao excluir processo', 'error');
     }
 }
 

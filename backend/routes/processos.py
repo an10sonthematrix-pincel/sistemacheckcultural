@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models import (
     criar_processo, listar_processos, obter_processo,
+    atualizar_processo, desativar_processo,
     criar_checklist_item, listar_checklist_itens
 )
 
@@ -39,6 +40,35 @@ def get_processo(processo_id):
     processo['checklist_itens'] = listar_checklist_itens(processo_id)
     
     return jsonify(processo)
+
+@processos_bp.route('/<int:processo_id>', methods=['PUT'])
+def put_processo(processo_id):
+    """Atualiza nome e descriÃ§Ã£o de um processo"""
+    dados = request.get_json()
+
+    if not dados or 'nome' not in dados or not str(dados.get('nome', '')).strip():
+        return jsonify({'erro': 'Nome do processo Ã© obrigatÃ³rio'}), 400
+
+    resultado = atualizar_processo(
+        processo_id,
+        dados['nome'],
+        dados.get('descricao', '')
+    )
+
+    if resultado.get('sucesso'):
+        return jsonify({'mensagem': 'Processo atualizado com sucesso'})
+    else:
+        return jsonify({'erro': resultado.get('erro')}), 400
+
+@processos_bp.route('/<int:processo_id>', methods=['DELETE'])
+def delete_processo(processo_id):
+    """Desativa (exclui) um processo"""
+    resultado = desativar_processo(processo_id)
+
+    if resultado.get('sucesso'):
+        return jsonify({'mensagem': 'Processo excluÃ­do com sucesso'})
+    else:
+        return jsonify({'erro': resultado.get('erro')}), 400
 
 @processos_bp.route('/<int:processo_id>/checklist', methods=['GET'])
 def get_checklist(processo_id):

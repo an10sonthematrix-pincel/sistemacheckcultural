@@ -162,6 +162,38 @@ def obter_processo(processo_id):
     finally:
         db.disconnect()
 
+def atualizar_processo(processo_id, nome, descricao):
+    db = get_db()
+    try:
+        db.cursor.execute(
+            "UPDATE processos SET nome = %s, descricao = %s WHERE id = %s",
+            (nome, descricao, processo_id)
+        )
+        db.connection.commit()
+        if db.cursor.rowcount == 0:
+            return {"erro": "Processo nÃ£o encontrado", "sucesso": False}
+        return {"sucesso": True}
+    except Error as err:
+        return {"erro": str(err), "sucesso": False}
+    finally:
+        db.disconnect()
+
+def desativar_processo(processo_id):
+    db = get_db()
+    try:
+        db.cursor.execute(
+            "UPDATE processos SET status = 'inativo' WHERE id = %s",
+            (processo_id,)
+        )
+        db.connection.commit()
+        if db.cursor.rowcount == 0:
+            return {"erro": "Processo nÃ£o encontrado", "sucesso": False}
+        return {"sucesso": True}
+    except Error as err:
+        return {"erro": str(err), "sucesso": False}
+    finally:
+        db.disconnect()
+
 def criar_checklist_item(processo_id, descricao, obrigatorio=True, ordem=0):
     db = get_db()
     try:

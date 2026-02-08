@@ -30,6 +30,22 @@ class API {
         return response.json();
     }
 
+    static async atualizarProcesso(id, nome, descricao) {
+        const response = await fetch(`${API_BASE}/processos/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome, descricao })
+        });
+        return response.json();
+    }
+
+    static async excluirProcesso(id) {
+        const response = await fetch(`${API_BASE}/processos/${id}`, {
+            method: 'DELETE'
+        });
+        return response.json();
+    }
+
     static async getChecklist(processoId) {
         const response = await fetch(`${API_BASE}/processos/${processoId}/checklist`);
         return response.json();
