@@ -763,7 +763,99 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== ARTISTAS (PF / PJ) =====
 const LINK_SITUACAO_CPF = 'https://servicos.receita.fazenda.gov.br/Servicos/CPF/ConsultaSituacao/ConsultaPublica.asp';
-const ITENS_ARTISTA_PADRAO = [
+const ITENS_ARTISTA_PF = [
+    {
+        descricao: 'CPF e RG do representante/artista',
+        obrigatorio: true,
+        ordem: 0
+    },
+    {
+        descricao: 'Certidão de quitação eleitoral',
+        obrigatorio: true,
+        ordem: 1
+    },
+    {
+        descricao: 'Comprovante de endereço do representante/artista',
+        obrigatorio: true,
+        ordem: 2
+    },
+    {
+        descricao: 'Comprovante bancário',
+        obrigatorio: true,
+        ordem: 3
+    },
+    {
+        descricao: 'Contrato ou declaração de exclusividade com o artista (firma reconhecida ou assinatura gov.br)',
+        obrigatorio: true,
+        ordem: 4
+    },
+    {
+        descricao: `Comprovante de situação cadastral do CPF - <a href="${LINK_SITUACAO_CPF}" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline">Link</a>`,
+        obrigatorio: true,
+        ordem: 5
+    },
+    {
+        descricao: 'Certidão Federal',
+        obrigatorio: true,
+        ordem: 6
+    },
+    {
+        descricao: 'Certidão Fazenda Estadual',
+        obrigatorio: true,
+        ordem: 7
+    },
+    {
+        descricao: 'Certidão Fazenda Municipal',
+        obrigatorio: true,
+        ordem: 8
+    },
+    {
+        descricao: 'Certidão Trabalhista',
+        obrigatorio: true,
+        ordem: 9
+    },
+    {
+        descricao: 'Currículo, portfólio e material comprobatório da consagração do artista',
+        obrigatorio: true,
+        ordem: 10
+    },
+    {
+        descricao: 'Composição de preço (propostas, 3 notas fiscais anteriores, contratos, pesquisas de mercado)',
+        obrigatorio: true,
+        ordem: 11
+    },
+    {
+        descricao: 'Declaração de inexistência de impedimentos à contratação com o Poder Público',
+        obrigatorio: true,
+        ordem: 12
+    },
+    {
+        descricao: 'Proposta de apresentação (descrição, duração, local, recursos) (MODELO)',
+        obrigatorio: true,
+        ordem: 13
+    },
+    {
+        descricao: 'Declarações complementares (MODELO)',
+        obrigatorio: true,
+        ordem: 14
+    },
+    {
+        descricao: 'Termo de permissão para uso de imagem (MODELO)',
+        obrigatorio: true,
+        ordem: 15
+    },
+    {
+        descricao: 'Declaração de renúncia de cachê (se aplicável)',
+        obrigatorio: false,
+        ordem: 16
+    },
+    {
+        descricao: 'Declaração de ciência de cachê assinada pelo artista (MODELO)',
+        obrigatorio: true,
+        ordem: 17
+    }
+];
+const ITENS_ARTISTA_PJ = [
     {
         descricao: 'HABILITAÇÃO JURÍDICA - CPF e RG do representante/artista',
         obrigatorio: true,
@@ -844,22 +936,22 @@ async function aplicarTemplateArtistaTipo(tipo, processoIdOverride = null, optio
             const resPF = await API.criarTemplate(
                 nomePF,
                 'Check-list padrÃ£o para artistas pessoa fÃ­sica',
-                ITENS_ARTISTA_PADRAO
+                ITENS_ARTISTA_PF
             );
             if (resPF && resPF.id) templatePF = { id: resPF.id, nome: nomePF };
         } else {
-            await API.atualizarTemplateItens(templatePF.id, ITENS_ARTISTA_PADRAO);
+            await API.atualizarTemplateItens(templatePF.id, ITENS_ARTISTA_PF);
         }
 
         if (!templatePJ) {
             const resPJ = await API.criarTemplate(
                 nomePJ,
                 'Check-list padrÃ£o para artistas pessoa jurÃ­dica',
-                ITENS_ARTISTA_PADRAO
+                ITENS_ARTISTA_PJ
             );
             if (resPJ && resPJ.id) templatePJ = { id: resPJ.id, nome: nomePJ };
         } else {
-            await API.atualizarTemplateItens(templatePJ.id, ITENS_ARTISTA_PADRAO);
+            await API.atualizarTemplateItens(templatePJ.id, ITENS_ARTISTA_PJ);
         }
 
         const chosenTemplate = tipo === 'pf' ? templatePF : templatePJ;
